@@ -1,0 +1,74 @@
+{% extends 'django_hr/layout.html' %}
+
+{% block body %}
+
+    <h3>Profile of {{ employee.first }} {{ employee.last }}</h3>
+    
+    {% if user.employee.hr %}
+        <a href="{% url 'editEmployee' employee_id=employee.id %}">Edit Details</a>
+        <br>
+    {% endif %}
+
+    <br>
+
+    <h5>Personal Details</h5>
+    <table class="table">
+        <tr>
+            <td>First Name</td>
+            <td>{{ employee.first }}</td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td>{{ employee.last }}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{ employee.user.email }}</td>
+        </tr>
+        <tr>
+            <td>Comments</td>
+            <td>{{ employee.comment }}</td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td>
+                {{ employee.street }}, {{ employee.city }}, {{ employee.province }} {{ employee.postalCode }} {{ employee.country }}
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <h5>Job Details</h5>
+    <table class="table">
+        <tr>
+            <td>Position</td>
+            <td>{{ employee.position.title }}</td>
+        </tr>
+        <tr>
+            <td>Department</td>
+            <td>{{ employee.department.name }}</td>
+        </tr>
+        <tr>
+            <td>Manager</td>
+            <td>{{ employee.manager }}</td>
+        </tr>
+        <tr>
+            <td>Hired On</td>
+            <td>{{ employee.hireDate }}</td>
+        </tr>
+        <tr>
+            <td>Salary</td>
+            <td>${{ employee.salary }} per annum</td>
+        </tr>
+        <tr>
+            <td>Vacation Days</td>
+            <td>{{ employee.vacationDays }}</td>
+        </tr>
+        <tr>
+            <td>Sick Leaves</td>
+            <td>{{ employee.sickDays }}</td>
+        </tr>
+    </table>
+    <br>
+
+{% endblock %}

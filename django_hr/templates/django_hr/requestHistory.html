@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <table class="table table-hover table-responsive-lg">
+        <thead>
+          <tr>
+            {% if showName %}
+                <th scope="col">Employee</th>
+            {% endif %}
+            <th scope="col">Leave Type</th>
+            <th scope="col">Date(s)</th>
+            <th scope="col">Employee Comment</th>
+            <th scope="col">HR Comment</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for request in doneRequests %}
+            <tr>
+                {% if showName %}
+                    <td align="left">{{ request.employee.first }} {{ request.employee.last }}</td>
+                {% endif %}
+                <td align="left">{{ request.leaveType }}</td>
+                <td align="left">{{ request.dateFrom }} - {{ request.dateTo }}</td>
+                <td align="left">{{ request.employeeComment }}</td>
+                <td align="left">{{ request.hrComment }}</td>
+                {% if request.status == "A" %}
+                    <td align="left" style="font-weight: bold; color:green;">{{ request.status }}</td>
+                {% elif request.status == "P" %}
+                    <td align="left" style="font-weight: bold; color:orange;">{{ request.status }}</td>
+                {% else %}
+                    <td align="left" style="font-weight: bold; color:red;">{{ request.status }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+</body>
+</html>

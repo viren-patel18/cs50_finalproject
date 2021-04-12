@@ -1,0 +1,157 @@
+{% extends "django_hr/layout.html" %}
+
+{% block body %}
+    
+    <div class="this_container" data-index=1>
+        <div class="card text-center">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active link_current_requests" aria-current="true" href="#">Current Requests</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link link_request_history" href="#">Request History</a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+                <div id="currentRequests" style="display: block;">
+                    <br>
+                    {% for request in pendingRequests %}
+        
+                    <div class="card w-100 leaveRequest">
+                        <h6 class="card-header">{{ request.employee }} requested time off:</h6>
+                        <div class="card-body">                    
+        
+                            <div class="">
+                                <input type="text" class="leaveRequestID" value="{{ request.id }}" hidden>
+                                {% if request.leaveType == 'VACATION' %}
+                                    <span style="font-weight: bold; color:blue;">{{ request.leaveType }}</span>
+                                {% elif request.leaveType == 'SICK' %}
+                                    <span style="font-weight: bold; color:red;">{{ request.leaveType }}</span>
+                                {% else %}
+                                    <span style="font-weight: bold; color:rgb(251, 255, 0);">{{ request.leaveType }}</span>
+                                {% endif %}
+                                From <span style="font-weight: bold;">{{ request.dateFrom }}</span>
+                                To <span style="font-weight: bold;">{{ request.dateTo }}</span>
+                                (Total Days: {{ request.days }})  <br><br>
+        
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        {{ request.employee.first }}'s Comment: <br> {{ request.employeeComment }}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        Your comment: <br>
+                                        <textarea class="form-control" id="hrComment" name="hrComment" rows="1" cols="50"></textarea>
+                                    </div>
+                                    <div class="col-sm-4 align-self-end">
+                                        <button class="rejectBtn btn btn-danger float-right">Reject</button>  
+                                        <button class="approveBtn btn btn-success float-right mr-1">Approve</button>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                      </div>
+                      <br>
+        
+                    {% empty %}
+                        No leave requests at this time.
+                    {% endfor %}
+                </div> 
+
+                <div id="requestHistory" style="display: none;">
+                    {% include "django_hr/requestHistory.html" %}
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+    
+      
+    
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            approveBtns = document.querySelectorAll('.approveBtn');
+            rejectBtns = document.querySelectorAll('.rejectBtn');
+            leaveRequestIDs = document.querySelectorAll('.leaveRequestID');
+            leaveRequests = document.querySelectorAll('.leaveRequest');
+            console.log('before loop');
+
+            link_current_requests = document.querySelector('.link_current_requests');
+            link_request_history = document.querySelector('.link_request_history');
+            link_current_requests.addEventListener('click', () => {
+                document.querySelector('#requestHistory').style.display = "none";
+                document.querySelector('#currentRequests').style.display = "block";
+                link_current_requests.className = "nav-link active link_current_requests";
+                link_request_history.className = "nav-link link_request_history";
+            });
+            link_request_history.addEventListener('click', () => {
+                document.querySelector('#requestHistory').style.display = "block";
+                document.querySelector('#currentRequests').style.display = "none";
+                link_request_history.className = "nav-link active link_request_history";
+                link_current_requests.className = "nav-link link_current_requests";
+            });
+            
+            /* APPROVE */
+            for(let i = 0; i < approveBtns.length; i++){
+                approveBtns[i].addEventListener('click', () => {
+                    console.log('before fetch');
+                    fetch(`/updateLeaveRequest`, {
+                        method: 'PUT',
+                        mode: 'same-origin',
+                        body: JSON.stringify({
+                            leaveRequestID: leaveRequestIDs[i].value,
+                            status: "A",
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+                        leaveRequests[i].style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.log('Error', error);
+                    });
+                    console.log('after fetch');
+                })
+            }
+
+            /* REJECT */
+            for(let i = 0; i < rejectBtns.length; i++){
+                rejectBtns[i].addEventListener('click', () => {
+                    console.log('before fetch');
+                    fetch(`/updateLeaveRequest`, {
+                        method: 'PUT',
+                        mode: 'same-origin',
+                        body: JSON.stringify({
+                            leaveRequestID: leaveRequestIDs[i].value,
+                            status: "R",
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+                        leaveRequests[i].style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.log('Error', error);
+                    });
+                    console.log('after fetch');
+                })
+            }
+
+
+        });
+        
+
+    </script>
+
+
+{% endblock %}

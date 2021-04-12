@@ -1,0 +1,121 @@
+{% extends "django_hr/layout.html" %}
+
+{% block body %}
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addLeaveRequest">
+        Request Time Off
+    </button>
+    <span id="sickDays" hidden>{{ sickDays }}</span>
+    <span id="vacationDays" hidden>{{ vacationDays }}</span>
+    <br>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addLeaveRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Request Time Off</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <form action="{% url 'timeOff' %}" id="requestForm" method="POST">{% csrf_token %}
+                <div class="modal-body">
+
+                    <div class="row mb-3">
+                        <label for="dateFrom" class="col-sm-2 col-form-label">Leave:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control col-sm-6" name="leaveType" id="leaveType" required>
+                                <option value="VACATION">Paid Vacation</option>
+                                <option value="SICK">Sick Leave</option>
+                                <option value="UNPAID">Unpaid Time Off</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="dateFrom" class="col-sm-2 col-form-label">From:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control col-sm-6" type="date" id="dateFrom" name="dateFrom" value="2021-01-01" min="2021-01-01" max="2021-12-31" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="dateTo" class="col-sm-2 col-form-label">To:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control col-sm-6" type="date" id="dateTo" name="dateTo" value="2021-01-01" min="2021-01-01" max="2021-12-31" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="comment" class="col-sm-2 col-form-label">Comment:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="comment" name="comment" rows="4" cols="50"></textarea>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <!-- <input type="submit" id="formSubmit" class="btn btn-primary" value="Send Request"> -->
+                    <button type="button" id="formSubmit" class="btn btn-secondary">Send Request</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <br>
+    {% if doneRequests == None %}
+        No previous requests.
+    {% else %}
+        {% include 'django_hr/requestHistory.html' %}
+    {% endif %}
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            formSubmit.addEventListener('click', () => {
+                dateFrom = document.querySelector('#dateFrom').value;
+                dateTo = document.querySelector('#dateTo').value;
+                formSubmit = document.querySelector('#formSubmit');
+                requestForm = document.querySelector('#requestForm'); 
+                leaveType = document.querySelector("#leaveType").value;
+                sickDays = document.querySelector('#sickDays').innerHTML;
+                vacationDays = document.querySelector('#vacationDays').innerHTML;
+                if(dateFrom != null && dateTo != null){
+                    if(new Date(dateFrom) > new Date(dateTo) || new Date(dateFrom) < new Date()) {
+                    alert('Dates entered are invalid.');
+                    } else {
+                        let diffTime = Math.abs((new Date(dateTo) - new Date(dateFrom))+1);
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if(leaveType == "VACATION"){
+                            if(diffDays > vacationDays){
+                                alert("You do not have that many vacation days.");
+                            } else{
+                                requestForm.submit();
+                            }
+                        }else if (leaveType == "SICK"){
+                            if(diffDays > sickDays){
+                                alert("You do not have that many sick leaves.");
+                            } else {
+                                requestForm.submit();
+                            }
+                        } else {
+                            requestForm.submit();
+                        }            
+                    };
+                };  
+                
+            })
+
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'django_hr/layout.html' %}
+
+{% block body %}
+   
+    <h4>Current Objectives</h4>
+    <br>
+    {% include 'django_hr/addObjective.html' %}
+
+    <br>
+    <br>
+
+    <div class="row">
+    {% for obj in objectives %}
+        <div class="col-sm-4">
+            <div class="card my-3 w-18">
+                <div class="card-body">
+                    <form class="formViewObjective" action="{% url 'objectives' %}" method="POST">
+                        <input type="text" name="submitType" value="viewObjective" hidden />
+                        <input type="objectiveID" name="objectiveID" value="{{ obj.id }}" hidden />
+                        <a class="linkViewObjective" href="#" style="font-size: 18px;">{{ obj.title }}</a>
+                    </form>
+                    {{ obj.description }}
+                    <br>
+        <span style="font-weight: bold; color: gray;">Due on: </span>{{ obj.deadline }}
+        <br>
+        <span style="font-weight: bold; color: gray;">Progress: </span>{{ obj.progress }}
+        <br><br>
+                    <form action="{% url 'objectives' %}" method="POST">
+                        <input type="text" name="submitType" value="checkIn" hidden />
+                        <input type="objectiveID" name="objectiveID" value="{{ obj.id }}" hidden />
+                        <input class="btn btn-primary" type="submit" value="Check In" />
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        No listings.
+    {% endfor %}
+    </div>
+
+    <hr class="solid">
+    <h4>Completed Objectives</h4>
+    <br>
+    {% for obj in doneObjectives %}
+        <form class="comFormViewObjective" action="{% url 'objectives' %}" method="POST">
+            <input type="text" name="submitType" value="viewObjective" hidden />
+            <input type="objectiveID" name="objectiveID" value="{{ obj.id }}" hidden />
+            <a class="comLinkViewObjective" href="#" style="font-size: 18px;">{{ obj.title }}</a>
+        </form>
+        {{ obj.description }}
+        <br>
+        <span style="font-weight: bold; color: gray;">Due on: </span>{{ obj.deadline }}
+        <br>
+        <span style="font-weight: bold; color: gray;">Progress: </span>{{ obj.progress }}
+        <br><br>
+    {% empty %}
+        No current objectives.
+    {% endfor %}
+    <br><br>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            linksViewObjective = document.querySelectorAll('.linkViewObjective');
+            comLinksViewObjective = document.querySelectorAll('.comLinkViewObjective');
+            formsViewObjective = document.querySelectorAll('.formViewObjective');
+            comFormsViewObjective = document.querySelectorAll('.comFormViewObjective');
+
+            for(let i = 0; i < linksViewObjective.length; i++){
+                linksViewObjective[i].addEventListener('click', () => {
+                    formsViewObjective[i].submit();
+                });
+            };
+
+            for(let i = 0; i < linksViewObjective.length; i++){
+                comLinksViewObjective[i].addEventListener('click', () => {
+                    comFormsViewObjective[i].submit();
+                });
+            }
+
+        });
+
+    </script>
+
+{% endblock %}}

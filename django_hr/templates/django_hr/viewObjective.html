@@ -1,0 +1,42 @@
+{% extends 'django_hr/layout.html' %}
+
+{% block body %}
+
+    <a href="{% url 'objectives' %}">Back to Objectives</a>
+
+    <br><br>
+    <h4>{{ objective.title }}</h4>
+    {{ objective.description }}
+    <br><br>
+    <span style="font-weight: bold; color: gray;">Due on: </span>{{ objective.deadline }}
+    <br>
+    <span style="font-weight: bold; color: gray;">Progress: </span>{{ objective.progress }}
+    <br>
+    <span style="font-weight: bold; color: gray;">Created on: </span>{{ objective.timestamp }}
+    <br><br>
+    
+    {% if objective.progress != 100 %}
+        <form action="{% url 'objectives' %}" method="POST">
+            <input type="text" name="submitType" value="checkIn" hidden />
+            <input type="objectiveID" name="objectiveID" value="{{ objective.id }}" hidden />
+            <input type="submit" value="Check In" />
+        </form>
+    {% endif %}
+
+    <hr class="solid">
+    <h5>Check Ins:</h5>
+    <br>
+
+    {% for item in checkIns %}
+    <span style="font-weight: bold;">{{ item.timestamp }}    </span>
+        <br>    
+        Message: {{ item.description }}
+        <br>
+        Progress: {{ item.progress }}
+        <br><br>
+    {% empty %}
+        No previous check-ins.
+    {% endfor %}
+
+
+{% endblock %}

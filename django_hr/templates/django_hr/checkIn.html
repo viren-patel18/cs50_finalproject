@@ -1,0 +1,37 @@
+{% extends 'django_hr/layout.html' %}
+
+{% block body %}
+
+    <h4>Check In</h4>
+    {{ objective.description }}
+    <br>
+    Due on: {{ objective.deadline }}
+    <br>
+    Created on: {{ objective.timestamp }}
+    <br>
+    <br>
+
+    <form action="{% url 'objectives' %}" method="POST">{% csrf_token %}
+
+            <div class="row mb-3">
+                <label for="title" class="col-sm-2 col-form-label">Progress:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="number" name="progress" min="0" max="100" value="{{ objective.progress }}" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="description" class="col-sm-2 col-form-label">Message:</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="description" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+
+        <input type="text" name="submitType" value="update" hidden />
+        <input type="objectiveID" name="objectiveID" value="{{ objective.id }}" hidden />
+        <input type="submit" value="Save" />
+        
+    </form>
+
+
+{% endblock %}

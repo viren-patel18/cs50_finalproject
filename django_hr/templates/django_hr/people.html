@@ -1,0 +1,33 @@
+{% extends 'django_hr/layout.html' %}
+
+{% block body %}
+
+    <h3>Employee List</h3>
+    {% if user.employee.hr %}
+      <a href="{% url 'addEmployee' %}">Add New Employee</a>
+      <br><br>
+    {% endif %}
+
+    <table class="table table-hover table-responsive-lg">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Position</th>
+            <th scope="col">Department</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for employee in employeeList %}
+            <tr>
+                <td align="left"><a href="{% url 'profile' employee_id=employee.id %}">{{ employee.first }}</a></td>
+                <td align="left">{{ employee.last }}</td>
+                <td align="left">{{ employee.position.title }}</td>
+                <td align="left">{{ employee.department.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+
+{% endblock %}
