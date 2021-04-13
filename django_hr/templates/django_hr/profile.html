@@ -15,24 +15,58 @@
     <table class="table">
         <tr>
             <td>First Name</td>
-            <td>{{ employee.first }}</td>
+            <td>
+                {% if employee.first is not None %}
+                    {{ employee.first}}
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>Last Name</td>
-            <td>{{ employee.last }}</td>
+            <td>
+                {% if employee.last is not None %}
+                    {{ employee.last }}
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>Email</td>
-            <td>{{ employee.user.email }}</td>
+            <td>
+                {% if employee.email is not None %}
+                    {{ employee.email }}
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>Comments</td>
-            <td>{{ employee.comment }}</td>
+            <td>
+                {% if employee.comment is not None %}
+                    {{ employee.comment }}
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>Address</td>
             <td>
-                {{ employee.street }}, {{ employee.city }}, {{ employee.province }} {{ employee.postalCode }} {{ employee.country }}
+                <td>
+                    {% if employee.street is not None %}
+                        {{ employee.street}}
+                    {% endif %}, 
+                    {% if employee.city is not None %}
+                        {{ employee.city}}
+                    {% endif %}, 
+                    {% if employee.province is not None %}
+                        {{ employee.province}}
+                    {% endif %} 
+                    {% if employee.postalCode is not None %}
+                        {{ employee.postalCode}}
+                    {% endif %} 
+                    {% if employee.country is not None %}
+                        {{ employee.country}}
+                    {% endif %} 
+
+                </td>
+                
             </td>
         </tr>
     </table>
@@ -58,7 +92,13 @@
         </tr>
         <tr>
             <td>Salary</td>
-            <td>${{ employee.salary }} per annum</td>
+            <td>$
+                {% if employee.salary is not None %}
+                        {{ employee.salary}}
+                {% else %}
+                    0
+                {% endif %} 
+                 per annum</td>
         </tr>
         <tr>
             <td>Vacation Days</td>

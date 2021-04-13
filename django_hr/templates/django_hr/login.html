@@ -2,6 +2,11 @@
 
 {% block body %}
 
+    <div style="text-align: center;">
+        Welcome! Please log in.
+    </div>
+    <br>
+
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="container">

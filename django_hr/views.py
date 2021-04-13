@@ -115,7 +115,7 @@ def updateLeaveRequest(request):
         return JsonResponse({"error": "PUT method expected."}, status = 400)
     data = json.loads(request.body)
     leaveRequest = LeaveRequest.objects.get(pk=data.get("leaveRequestID"))
-    leaveRequest.status = " " if data.get("status") == "A" else "R"
+    leaveRequest.status = data.get("status")
     leaveRequest.hrComment = data.get("hrComment")
     employee = Employee.objects.get(pk=leaveRequest.employee.id)
     if leaveRequest.status == "A":

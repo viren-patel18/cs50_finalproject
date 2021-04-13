@@ -19,7 +19,7 @@
         <form action="{% url 'objectives' %}" method="POST">
             <input type="text" name="submitType" value="checkIn" hidden />
             <input type="objectiveID" name="objectiveID" value="{{ objective.id }}" hidden />
-            <input type="submit" value="Check In" />
+            <input class="btn btn-primary" type="submit" value="Check In" />
         </form>
     {% endif %}
 

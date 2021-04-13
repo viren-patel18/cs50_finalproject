@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         Your comment: <br>
-                                        <textarea class="form-control" id="hrComment" name="hrComment" rows="1" cols="50"></textarea>
+                                        <textarea class="hrComment form-control" name="hrComment" rows="1" cols="50"></textarea>
                                     </div>
                                     <div class="col-sm-4 align-self-end">
                                         <button class="rejectBtn btn btn-danger float-right">Reject</button>  
@@ -81,6 +81,7 @@
             leaveRequestIDs = document.querySelectorAll('.leaveRequestID');
             leaveRequests = document.querySelectorAll('.leaveRequest');
             console.log('before loop');
+            hrComments = document.querySelectorAll('.hrComment');
 
             link_current_requests = document.querySelector('.link_current_requests');
             link_request_history = document.querySelector('.link_request_history');
@@ -100,13 +101,14 @@
             /* APPROVE */
             for(let i = 0; i < approveBtns.length; i++){
                 approveBtns[i].addEventListener('click', () => {
-                    console.log('before fetch');
+                    console.log(hrComments[i].value);
                     fetch(`/updateLeaveRequest`, {
                         method: 'PUT',
                         mode: 'same-origin',
                         body: JSON.stringify({
                             leaveRequestID: leaveRequestIDs[i].value,
                             status: "A",
+                            hrComment: hrComments[i].value,
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                         })
                     })
@@ -125,13 +127,14 @@
             /* REJECT */
             for(let i = 0; i < rejectBtns.length; i++){
                 rejectBtns[i].addEventListener('click', () => {
-                    console.log('before fetch');
+                    console.log(hrComments[i].value);
                     fetch(`/updateLeaveRequest`, {
                         method: 'PUT',
                         mode: 'same-origin',
                         body: JSON.stringify({
                             leaveRequestID: leaveRequestIDs[i].value,
                             status: "R",
+                            hrComment: hrComments[i].value,
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                         })
                     })

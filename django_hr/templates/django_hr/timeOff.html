@@ -6,9 +6,23 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addLeaveRequest">
         Request Time Off
     </button>
-    <span id="sickDays" hidden>{{ sickDays }}</span>
-    <span id="vacationDays" hidden>{{ vacationDays }}</span>
-    <br>
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">    </div>
+            <div class="col-sm">
+            <h6>Available Sick Days: <span style="color: white; font-size: 18px;" class="sickDays badge bg-info">{{ sickDays }}</span></h6>
+          </div>
+          <div class="col-sm">
+            <h6>Available Vacation Days: <span style="color: white; font-size: 18px;" class="vacationDays badge bg-info">{{ vacationDays }}</span></h6>
+          </div>
+        </div>
+      </div>
+    
+    
+    <!-- <span id="sickDays" hidden>{{ sickDays }}</span>
+    <span id="vacationDays" hidden>{{ vacationDays }}</span> -->
+    
 
     <!-- Modal -->
     <div class="modal fade" id="addLeaveRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -86,8 +100,8 @@
                 formSubmit = document.querySelector('#formSubmit');
                 requestForm = document.querySelector('#requestForm'); 
                 leaveType = document.querySelector("#leaveType").value;
-                sickDays = document.querySelector('#sickDays').innerHTML;
-                vacationDays = document.querySelector('#vacationDays').innerHTML;
+                sickDays = document.querySelector('.sickDays').innerHTML;
+                vacationDays = document.querySelector('.vacationDays').innerHTML;
                 if(dateFrom != null && dateTo != null){
                     if(new Date(dateFrom) > new Date(dateTo) || new Date(dateFrom) < new Date()) {
                     alert('Dates entered are invalid.');
@@ -110,6 +124,8 @@
                             requestForm.submit();
                         }            
                     };
+                } else {
+                    console.log("One date is null");
                 };  
                 
             })
